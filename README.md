@@ -3,7 +3,7 @@
 Open an external editor as part of the user interface of a command-line programm. Think `git rebase -i`.
 
 
-```golang
+```go
 import (
     "strings"
     "github.com/kioopi/extedit"
