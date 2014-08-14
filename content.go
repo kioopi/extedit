@@ -1,15 +1,15 @@
 package extedit
 
 import (
-  "io"
-  "os"
 	"bufio"
+	"io"
+	"os"
 	"strings"
 )
 
 // Content represents a the in- and output of an extedit session.
 type Content struct {
-  c []string
+	c      []string
 	reader io.Reader
 }
 
@@ -32,7 +32,7 @@ func contentFromReader(content io.Reader, split bufio.SplitFunc) (Content, error
 	scanner.Split(split)
 
 	for scanner.Scan() {
-		c.c= append(c.c, scanner.Text())
+		c.c = append(c.c, scanner.Text())
 	}
 	c.reader = strings.NewReader(c.String())
 
@@ -46,7 +46,7 @@ func contentFromFile(filename string, split bufio.SplitFunc) (Content, error) {
 	}
 	defer file.Close()
 
-  return contentFromReader(file, split)
+	return contentFromReader(file, split)
 }
 
 func contentFromString(content string, split bufio.SplitFunc) (Content, error) {

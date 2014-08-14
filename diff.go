@@ -1,7 +1,7 @@
 package extedit
 
 type Diff struct {
-	Content Content
+	Content     Content
 	Differences []int
 }
 
@@ -14,10 +14,10 @@ func (d Diff) Line(i int) string {
 }
 
 func NewDiff(a, b Content) Diff {
-	d := Diff{ Content: b }
+	d := Diff{Content: b}
 
 	for i, line := range b.c {
-		if len(a.c) <= i || line != a.c[i]  {
+		if len(a.c) <= i || line != a.c[i] {
 			d.Differences = append(d.Differences, i)
 		}
 	}

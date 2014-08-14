@@ -4,19 +4,19 @@
 package extedit
 
 import (
-  "io"
-  "io/ioutil"
-  "os"
-  "os/exec"
 	"bufio"
+	"io"
+	"io/ioutil"
+	"os"
+	"os/exec"
 )
 
 const default_editor = "vim"
 
-// Session represents 
+// Session represents
 type Session struct {
-	input Content
-	result Content
+	input     Content
+	result    Content
 	SplitFunc bufio.SplitFunc
 }
 
@@ -27,30 +27,30 @@ func (s *Session) Invoke(content io.Reader) (Diff, error) {
 	d := Diff{}
 
 	input, err := contentFromReader(content, s.SplitFunc)
-  if err != nil {
-    return d, err
-  }
+	if err != nil {
+		return d, err
+	}
 
 	fileName, err := writeTmpFile(input)
-  if err != nil {
-    return d, err
-  }
+	if err != nil {
+		return d, err
+	}
 
 	cmd := editorCmd(fileName)
 	err = cmd.Run()
-  if err != nil {
-    return d, err
-  }
+	if err != nil {
+		return d, err
+	}
 
 	result, err := contentFromFile(fileName, s.SplitFunc)
-  if err != nil {
-    return d, err
-  }
+	if err != nil {
+		return d, err
+	}
 
 	return NewDiff(input, result), nil
 }
 
-func NewSession() (*Session) {
+func NewSession() *Session {
 	return &Session{SplitFunc: bufio.ScanLines}
 }
 
@@ -63,29 +63,29 @@ func Invoke(content io.Reader) (Diff, error) {
 // writeTmpFile writes content to a temporary file and returns
 // the path to the file
 func writeTmpFile(content io.Reader) (string, error) {
-  f, err := ioutil.TempFile("","")
+	f, err := ioutil.TempFile("", "")
 
-  if err != nil {
-    return "", err
-  }
+	if err != nil {
+		return "", err
+	}
 
-  io.Copy(f, content)
-  f.Close()
+	io.Copy(f, content)
+	f.Close()
 	return f.Name(), nil
 }
 
 // editorCmd creates a os/exec.Cmd to open
 // filename in an editor ready to be run()
 func editorCmd(filename string) *exec.Cmd {
-  editorPath := os.Getenv("EDITOR")
-  if editorPath == "" {
-    editorPath = default_editor
-  }
-  editor := exec.Command(editorPath, filename)
+	editorPath := os.Getenv("EDITOR")
+	if editorPath == "" {
+		editorPath = default_editor
+	}
+	editor := exec.Command(editorPath, filename)
 
-  editor.Stdin = os.Stdin
-  editor.Stdout = os.Stdout
-  editor.Stderr = os.Stderr
+	editor.Stdin = os.Stdin
+	editor.Stdout = os.Stdout
+	editor.Stderr = os.Stderr
 
-  return editor
+	return editor
 }
